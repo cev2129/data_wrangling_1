@@ -188,3 +188,20 @@ litters_df =
     )
   )
 ```
+
+## Import an Excel File
+
+Import MLB 2011 summary data, only use sheet = when there are multiple
+sheets. This one does not, but is included for practice.
+
+``` r
+mlb_df = read_excel("data/mlb11.xlsx", sheet = "mlb11")
+```
+
+## Import SAS data
+
+``` r
+pulse_df = read_sas("data/public_pulse_data.sas7bdat")
+```
+
+## Never use read.csv, and never use the \$

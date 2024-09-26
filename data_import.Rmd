@@ -5,6 +5,9 @@ output: github_document
 
 ```{r setup, echo=FALSE, message=FALSE}
 library(tidyverse)
+library(readxl) 
+library(haven)
+
 ```
 
 This document will show how to import data. 
@@ -27,3 +30,69 @@ tail(litters_df, 10)
 ```{r eval=FALSE}
 view(litters_df)
 ```
+
+
+Use relative paths 
+```{r}
+pups_df = read_csv("data/FAS_pups.csv")
+ 
+
+pups_df= janitor::clean_names(pups_df) 
+
+head(pups_df)
+```
+
+Use an absolute path. Does not work once data wrangling folder was moved to bonus_directory. Relative path will still work tho. 
+```{r}
+pups_df = read.csv("/Users/tinavarela/Desktop/data_wrangling_1/data/FAS_pups.csv")
+```
+
+## look at read csv options 
+
+col_names and skipping rows
+```{r}
+litters_df = 
+  read_csv(
+    file = "data/FAS_litters.csv",
+    col_names= FALSE,
+    skip = 2
+  )
+litters_df
+```
+
+What about missing data 
+```{r}
+litters_df = 
+  read_csv(
+    file = "data/FAS_litters.csv",
+    na = c("NA", "", ".")
+  )
+```
+
+What if we code `group` as a factor variable 
+```{r}
+litters_df = 
+  read_csv(
+    file = "data/FAS_litters.csv",
+    na = c("NA", "", "."),
+    col_types = cols(
+      Group = col_factor()
+    )
+  )
+```
+
+
+## Import an Excel File 
+
+Import MLB 2011 summary data, only use sheet = when there are multiple sheets. This one does not, but is included for practice.  
+
+```{r}
+mlb_df = read_excel("data/mlb11.xlsx", sheet = "mlb11")
+```
+
+## Import SAS data 
+```{r}
+pulse_df = read_sas("data/public_pulse_data.sas7bdat")
+```
+
+## Never use read.csv, and never use the $ 
