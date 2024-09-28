@@ -11,87 +11,57 @@ library(tidyverse)
 
 This document will show how to *manipulate* data. 
 
-## Import the FAS litters CSV
+Import the two datasets that we're going to manipulate
+
 
 ```{r}
-litters_df = read_csv("data/FAS_litters.csv")
-
-
-
+litters_df = read_csv("data/FAS_litters.csv", na = c("NA", "", ".'"))
 litters_df = janitor::clean_names(litters_df)
 
-litters_df
-
-head(litters_df)
-tail(litters_df, 10)
+pups_df = read_csv("data/FAS_pups.csv", na = c("NA", "", ".'"))
+pups_df= janitor::clean_names(pups_df)  
 ```
 
-```{r eval=FALSE}
-view(litters_df)
-```
+## `select`
 
-
-Use relative paths 
+Use `select()` to select variables 
 ```{r}
-pups_df = read_csv("data/FAS_pups.csv")
- 
+select(litters_df, group, litter_number, gd0_weight)
 
-pups_df= janitor::clean_names(pups_df) 
+select(litters_df, group:gd18_weight)
 
-head(pups_df)
-```
+select(litters_df, -pups_survive)
 
-Use an absolute path. Does not work once data wrangling folder was moved to bonus_directory. Relative path will still work tho. 
-```{r}
-pups_df = read.csv("/Users/tinavarela/Desktop/data_wrangling_1/data/FAS_pups.csv")
-```
 
-## look at read csv options 
+select(litters_df, -(group:gd18_weight))
 
-col_names and skipping rows
-```{r}
-litters_df = 
-  read_csv(
-    file = "data/FAS_litters.csv",
-    col_names= FALSE,
-    skip = 2
-  )
-litters_df
-```
+select(litters_df, starts_with("gd"))
 
-What about missing data 
-```{r}
-litters_df = 
-  read_csv(
-    file = "data/FAS_litters.csv",
-    na = c("NA", "", ".")
-  )
-```
+select(litters_df, contains("pups"))
 
-What if we code `group` as a factor variable 
-```{r}
-litters_df = 
-  read_csv(
-    file = "data/FAS_litters.csv",
-    na = c("NA", "", "."),
-    col_types = cols(
-      Group = col_factor()
-    )
-  )
+select(litters_df, GROUP = group)
+
+rename(litters_df, GROUP = group)
+
+select(litters_df, litter_number, group)
+
+relocate(litters_df, litter_number, pups_survive)
+
 ```
 
 
-## Import an Excel File 
+## `filter`
 
-Import MLB 2011 summary data, only use sheet = when there are multiple sheets. This one does not, but is included for practice.  
+## `mutate`
+
+## `arrange`
+
+
+## `PIPING`    
+
+
 
 ```{r}
-mlb_df = read_excel("data/mlb11.xlsx", sheet = "mlb11")
+
 ```
 
-## Import SAS data 
-```{r}
-pulse_df = read_sas("data/public_pulse_data.sas7bdat")
-```
-
-## Never use read.csv, and never use the $ 
