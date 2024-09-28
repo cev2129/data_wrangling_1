@@ -84,7 +84,7 @@ filter(pups_df, sex == 2, pd_walk < 11)
 ## `mutate`
 To select columns or to change them or create new ones.
 ```{r}
-mutate(litters_df, wt_gain = gd18_weight - gd0_weight)
+
 
 mutate(litters_df, sq_pups = pups_born_alive^2)
 
@@ -96,18 +96,14 @@ Create a variable that is the sum of all the PD variables
 ```{r}
 mutate(pups_df, pivot_minus7 = pd_pivot - 7)
 
-mutate(pups_df, pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk)
-```
+
 
 
 ## `arrange`
 
 ```{r}
-
 arrange(litters_df,pups_born_alive, gd0_weight)
 head(arrange(litters_df, group, pups_born_alive), 10)
-
-
 ```
 
 ## PIPING!!!!    
@@ -124,3 +120,16 @@ litters_df =
   )
 ```
 
+Data export
+```{r}
+litters_df = 
+  read_csv("./data/FAS_litters.csv", na = c("NA", ".", "")) |> 
+  janitor::clean_names() |>
+  select(-pups_born_alive) |>
+  filter(group == "Con7") |>
+  mutate(
+    wt_gain = gd18_weight-gd0_weight
+  )
+
+write_csv(litters_df, "data/cleaned_fas_litters.csv")
+```
