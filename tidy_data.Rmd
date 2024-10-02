@@ -98,3 +98,33 @@ lotr_tidy =
   mutate(race = str_to_lower(race)) |> 
   select(movie, everything())
 ```
+
+##Joining data sets
+```{r}
+pup_df = 
+  read_csv(
+    "./data/FAS_pups.csv",
+    na = c("NA", "", ".")) |>
+  janitor::clean_names() |>
+  mutate(
+    sex = 
+      case_match(
+        sex, 
+        1 ~ "male", 
+        2 ~ "female"),
+    sex = as.factor(sex))
+
+litter_df = 
+  read_csv(
+    "./data/FAS_litters.csv",
+    na = c("NA", ".", "")) |>
+  janitor::clean_names() |>
+  separate(group, into = c("dose", "day_of_tx"), sep = 3) |>
+  relocate(litter_number) |>
+  mutate(
+    wt_gain = gd18_weight - gd0_weight,
+    dose = str_to_lower(dose))
+
+fas_df = 
+  left_join(pup_df, litter_df, by = "litter_number")
+```
